@@ -1,6 +1,6 @@
 FROM python:3.9-slim-buster
 
-ENV POETRY_VERSION=1.1.12
+ENV POETRY_VERSION=1.5.1
 
 RUN useradd --create-home flashbot \
     && apt-get update \
@@ -17,7 +17,7 @@ WORKDIR /app/
 
 USER flashbot
 
-RUN poetry config virtualenvs.create false \
+RUN poetry config virtualenvs.create true \
     && poetry install
 
 COPY --chown=flashbot . /app
