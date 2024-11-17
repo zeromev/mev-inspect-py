@@ -19,7 +19,8 @@ USER flashbot
 
 RUN poetry config virtualenvs.create true \
     && poetry install
-
+    
+ENV PATH="/app/.venv/bin:$PATH"
 COPY --chown=flashbot . /app
 
 # easter eggs 😝
