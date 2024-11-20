@@ -25,7 +25,7 @@ def upgrade():
         sa.Column("transaction_hash", sa.String(66), nullable=False),
         sa.Column("type", sa.String(256), nullable=False),
         sa.Column("gross_profit_usd", sa.Numeric, nullable=False),
-        sa.Column("miner_payment_usd", sa.Numeric, nullable=False),
+        sa.Column("miner_payment_usd", sa.Numeric, nullable=True),
         sa.Column("gas_used", sa.Numeric, nullable=False),
         sa.Column("gas_price", sa.Numeric, nullable=False),
         sa.Column("coinbase_transfer", sa.Numeric, nullable=False),
