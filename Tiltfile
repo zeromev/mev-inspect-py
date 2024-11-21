@@ -2,18 +2,18 @@ load("ext://helm_remote", "helm_remote")
 load("ext://secret", "secret_from_dict")
 load("ext://configmap", "configmap_from_dict")
 
-helm_remote("postgresql",
-            repo_name="bitnami",
-            repo_url="https://charts.bitnami.com/bitnami",
-            set=["auth.postgresPassword=" + os.environ["POSTGRES_PASSWORD"], "auth.database=mev_inspect"],
-)
+# helm_remote("postgresql",
+#             repo_name="bitnami",
+#             repo_url="https://charts.bitnami.com/bitnami",
+#             set=["auth.postgresPassword=" + os.environ["POSTGRES_PASSWORD"], "auth.database=mev_inspect"],
+# )
 
 helm_remote("redis",
             repo_name="bitnami",
             repo_url="https://charts.bitnami.com/bitnami",
             set=["global.redis.password=password"],
 )
-k8s_yaml("./tilt_modules/postgresql-nodeport.yaml")
+# k8s_yaml("./tilt_modules/postgresql-nodeport.yaml")
 
 k8s_yaml(configmap_from_dict("mev-inspect-rpc", inputs = {
     "url" : os.environ["RPC_URL"],
@@ -24,9 +24,9 @@ k8s_yaml(configmap_from_dict("mev-inspect-listener-healthcheck", inputs = {
 }))
 
 k8s_yaml(secret_from_dict("mev-inspect-db-credentials", inputs = {
-    "username" : "postgres",
+    "username" : os.environ["POSTGRES_USER"],
     "password": os.environ["POSTGRES_PASSWORD"],
-    "host": "postgresql",
+    "host": os.environ["POSTGRES_HOST"],
 }))
 
 # if using https://github.com/taarushv/trace-db
