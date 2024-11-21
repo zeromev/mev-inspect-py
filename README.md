@@ -6,6 +6,7 @@
 [Maximal extractable value](https://ethereum.org/en/developers/docs/mev/) inspector for Ethereum, to illuminate the [dark forest](https://www.paradigm.xyz/2020/08/ethereum-is-a-dark-forest/) 🌲💡
 
 Given a block, mev-inspect finds:
+
 - miner payments (gas + coinbase)
 - tokens transfers and profit
 - swaps and [arbitrages](https://twitter.com/bertcmiller/status/1427632028263059462)
@@ -28,12 +29,13 @@ mev-inspect-py is built to run on kubernetes locally and in production.
 ### Set up
 
 Create a new cluster with:
+`kind-config.yaml` is part of this repo so cd into it and then create a new cluster
 
 ```
-kind create cluster
+kind create cluster --config=kind-config.yaml
 ```
 
-Set an environment variable `RPC_URL` to an RPC for fetching blocks.
+Set an environment variable `RPC_URL` to an RPC for fetching blocks. Set another environment variable `POSTGRES_PASSWORD` for authentication of your database.
 
 mev-inspect-py currently requires a node with support for Erigon traces and receipts (not geth yet 😔).
 
@@ -43,8 +45,8 @@ Example:
 
 ```
 export RPC_URL="http://111.111.111.111:8546"
+export POSTGRES_PASSWORD="MY_PASSWORD" # Update the password here. This password can be used to access mev_inspect database externally
 ```
-
 
 Next, start all services with:
 
@@ -63,7 +65,7 @@ On first startup, you'll need to apply database migrations with:
 And load prices data
 
 ```
-./mev prices fetch-all
+./mev prices fetch-all # This is not needed, since the API has been moved to paid version
 ```
 
 ## Monolithic (non-kubernetes) install instructions
@@ -116,6 +118,7 @@ And stop the listener with:
 For larger backfills, you can inspect many blocks in parallel
 
 To inspect blocks 12914944 to 12915044, run
+
 ```
 ./mev backfill 12914944 12915044
 ```
@@ -125,6 +128,7 @@ This queues the blocks in Redis to be pulled off by the mev-inspect-worker servi
 To increase or decrease parallelism, update the replicaCount value for the mev-inspect-workers helm chart
 
 Locally, this can be done by editing Tiltfile and changing "replicaCount=1" to your desired parallelism:
+
 ```
 k8s_yaml(helm(
     './k8s/mev-inspect-workers',
@@ -134,31 +138,37 @@ k8s_yaml(helm(
 ```
 
 You can see worker pods spin up then complete by watching the status of all pods
+
 ```
 watch kubectl get pods
 ```
 
 To see progress and failed batches, connect to Redis with
+
 ```
 ./mev redis
 ```
 
 For total messages, query:
+
 ```
 HLEN dramatiq:default.msgs
 ```
 
 For messages failed and waiting to retry in the delay queue (DQ), query:
+
 ```
 HGETALL dramatiq:default.DQ.msgs
 ```
 
 For messages permanently failed in the dead letter queue (XQ), query:
+
 ```
 HGETALL dramatiq:default.XQ.msgs
 ```
 
 To clear the queue, delete keys for the main queue and delay queue
+
 ```
 DEL dramatiq:default.msgs
 DEL dramatiq:default.DQ.msgs
@@ -169,6 +179,7 @@ For more information on queues, see the [spec shared by dramatiq](https://github
 **Backfilling a list of blocks**
 
 Create a file containing a block per row, for example blocks.txt containing:
+
 ```
 12500000
 12500001
@@ -176,17 +187,18 @@ Create a file containing a block per row, for example blocks.txt containing:
 ```
 
 Then queue the blocks with
+
 ```
 cat blocks.txt | ./mev block-list
 ```
 
 To watch the logs for a given worker pod, take its pod name using the above, then run:
+
 ```
 kubectl logs -f pod/mev-inspect-worker-abcdefg
 ```
 
 (where `mev-inspect-worker-abcdefg` is your actual pod name)
-
 
 ### Exploring
 
@@ -205,6 +217,14 @@ mev_inspect=#
 ```
 
 You're ready to query!
+
+To access the database externally use the following command:
+
+```
+psql -U postgres -h VM_IP -p 30432
+```
+
+When prompted for password, provide the password previously exported in POSTGRES_PASSWORD variable.
 
 Try finding the total number of swaps decoded with UniswapV3Pool:
 
@@ -301,4 +321,4 @@ If you find a security vulnerability on this project or any other initiative rel
 
 ---
 
-Made with ☀️  by the ⚡🤖 collective.
+Made with ☀️ by the ⚡🤖 collective.

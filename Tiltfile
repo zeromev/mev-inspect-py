@@ -5,7 +5,7 @@ load("ext://configmap", "configmap_from_dict")
 helm_remote("postgresql",
             repo_name="bitnami",
             repo_url="https://charts.bitnami.com/bitnami",
-            set=["auth.postgresPassword=password", "auth.database=mev_inspect"],
+            set=["auth.postgresPassword=" + os.environ["POSTGRES_PASSWORD"], "auth.database=mev_inspect"],
 )
 
 helm_remote("redis",
@@ -13,6 +13,7 @@ helm_remote("redis",
             repo_url="https://charts.bitnami.com/bitnami",
             set=["global.redis.password=password"],
 )
+k8s_yaml("./tilt_modules/postgresql-nodeport.yaml")
 
 k8s_yaml(configmap_from_dict("mev-inspect-rpc", inputs = {
     "url" : os.environ["RPC_URL"],
@@ -24,7 +25,7 @@ k8s_yaml(configmap_from_dict("mev-inspect-listener-healthcheck", inputs = {
 
 k8s_yaml(secret_from_dict("mev-inspect-db-credentials", inputs = {
     "username" : "postgres",
-    "password": "password",
+    "password": os.environ["POSTGRES_PASSWORD"],
     "host": "postgresql",
 }))
 
@@ -47,14 +48,14 @@ k8s_yaml(helm(
     './k8s/mev-inspect',
     name='mev-inspect',
     set=[
-        "extraEnv[0].name=AWS_ACCESS_KEY_ID",
-        "extraEnv[0].value=foobar",
-        "extraEnv[1].name=AWS_SECRET_ACCESS_KEY",
-        "extraEnv[1].value=foobar",
-        "extraEnv[2].name=AWS_REGION",
-        "extraEnv[2].value=us-east-1",
-        "extraEnv[3].name=AWS_ENDPOINT_URL",
-        "extraEnv[3].value=http://localstack:4566",
+        # "extraEnv[0].name=AWS_ACCESS_KEY_ID",
+        # "extraEnv[0].value=foobar",
+        # "extraEnv[1].name=AWS_SECRET_ACCESS_KEY",
+        # "extraEnv[1].value=foobar",
+        # "extraEnv[2].name=AWS_REGION",
+        # "extraEnv[2].value=us-east-1",
+        # "extraEnv[3].name=AWS_ENDPOINT_URL",
+        # "extraEnv[3].value=http://localstack:4566",
     ],
 ))
 
@@ -62,14 +63,14 @@ k8s_yaml(helm(
     './k8s/mev-inspect-workers',
     name='mev-inspect-workers',
     set=[
-        "extraEnv[0].name=AWS_ACCESS_KEY_ID",
-        "extraEnv[0].value=foobar",
-        "extraEnv[1].name=AWS_SECRET_ACCESS_KEY",
-        "extraEnv[1].value=foobar",
-        "extraEnv[2].name=AWS_REGION",
-        "extraEnv[2].value=us-east-1",
-        "extraEnv[3].name=AWS_ENDPOINT_URL",
-        "extraEnv[3].value=http://localstack:4566",
+        # "extraEnv[0].name=AWS_ACCESS_KEY_ID",
+        # "extraEnv[0].value=foobar",
+        # "extraEnv[1].name=AWS_SECRET_ACCESS_KEY",
+        # "extraEnv[1].value=foobar",
+        # "extraEnv[2].name=AWS_REGION",
+        # "extraEnv[2].value=us-east-1",
+        # "extraEnv[3].name=AWS_ENDPOINT_URL",
+        # "extraEnv[3].value=http://localstack:4566",
         "replicaCount=1",
     ],
 ))
@@ -88,11 +89,11 @@ k8s_resource(
 # k8s_yaml(helm('./k8s/mev-inspect-prices', name='mev-inspect-prices'))
 # k8s_resource(workload="mev-inspect-prices", resource_deps=["postgresql"])
 
-local_resource(
-    'pg-port-forward',
-    serve_cmd='kubectl port-forward --namespace default svc/postgresql 5432:5432',
-    resource_deps=["postgresql"]
-)
+# local_resource(
+#     'pg-port-forward',
+#     serve_cmd='kubectl port-forward --namespace default svc/postgresql 5432:5432',
+#     resource_deps=["postgresql"]
+# )
 
 # if using local S3 exports
 #k8s_yaml(secret_from_dict("mev-inspect-export", inputs = {

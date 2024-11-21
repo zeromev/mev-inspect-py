@@ -1,0 +1,9 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+    extraPortMappings:
+      - containerPort: 30432
+        hostPort: 30432
+# Command to create cluster
+# kind create cluster --config=kind-config.yaml
