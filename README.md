@@ -35,7 +35,34 @@ Create a new cluster with:
 kind create cluster --config=kind-config.yaml
 ```
 
-Set an environment variable `RPC_URL` to an RPC for fetching blocks. Set another environment variable `POSTGRES_PASSWORD` for authentication of your database.
+Set an environment variable `RPC_URL` to an RPC for fetching blocks.
+
+Set three more environment variables for authentication of external database.
+
+`POSTGRES_USER` `POSTGRES_PASSWORD` `POSTGRES_HOST`
+
+eg.
+
+```
+export POSTGRES_USER=postgres
+export POSTGRES_PASSWORD=YOUR_PASSWORD
+export POSTGRES_HOST=VM_PUBLIC_IP
+```
+
+After that update the following two postgres config files to allow connectivity to database from mev_inspect
+
+In `pg_hba.conf`
+
+```
+host    all             all             VM_PUBLIC_IP/32            md5
+host    all             all             172.18.0.0/24                md5
+```
+
+In `postgresql.conf`
+
+```
+listen_addresses = '\*' # find listen_address in file and replace localhost with *
+```
 
 mev-inspect-py currently requires a node with support for Erigon traces and receipts (not geth yet 😔).
 
@@ -217,14 +244,6 @@ mev_inspect=#
 ```
 
 You're ready to query!
-
-To access the database externally use the following command:
-
-```
-psql -U postgres -h VM_IP -p 30432
-```
-
-When prompted for password, provide the password previously exported in POSTGRES_PASSWORD variable.
 
 Try finding the total number of swaps decoded with UniswapV3Pool:
 
