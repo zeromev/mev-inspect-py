@@ -72,7 +72,6 @@ Example:
 
 ```
 export RPC_URL="http://111.111.111.111:8546"
-export POSTGRES_PASSWORD="MY_PASSWORD" # Update the password here. This password can be used to access mev_inspect database externally
 ```
 
 Next, start all services with:
