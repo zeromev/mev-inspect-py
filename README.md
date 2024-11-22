@@ -61,7 +61,7 @@ host    all             all             172.18.0.0/24                md5
 In `postgresql.conf`
 
 ```
-listen_addresses = '\*' # find listen_address in file and replace localhost with *
+listen_addresses = '*' # find listen_address in file and replace localhost with *
 ```
 
 mev-inspect-py currently requires a node with support for Erigon traces and receipts (not geth yet 😔).
