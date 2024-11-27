@@ -88,12 +88,6 @@ On first startup, you'll need to apply database migrations with:
 ./mev exec alembic upgrade head
 ```
 
-And load prices data
-
-```
-./mev prices fetch-all # This is not needed, since the API has been moved to paid version
-```
-
 ## Monolithic (non-kubernetes) install instructions
 
 For an alternative means of running mev-inspect-py for smaller set-ups or debug purposes see the [monolithic install instructions](MONOLITHIC.md).
