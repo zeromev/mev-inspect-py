@@ -37,6 +37,14 @@ sudo kind create cluster --config=kind-config.yaml
 
 Set an environment variable `RPC_URL` to the RPC of a full archive node for fetching blocks.
 
+mev-inspect-py currently requires a node with support for Erigon traces and receipts (not geth yet 😔).
+
+Example:
+
+```
+export RPC_URL="http://111.111.111.111:8546"
+```
+
 Set three more environment variables for authentication of external database.
 
 `POSTGRES_USER` `POSTGRES_PASSWORD` `POSTGRES_HOST`
@@ -44,7 +52,6 @@ Set three more environment variables for authentication of external database.
 eg.
 
 ```
-export RPC_URL=YOUR_FULL_ARCHIVE_NODE_URL
 export POSTGRES_USER=postgres
 export POSTGRES_PASSWORD=YOUR_PASSWORD
 export POSTGRES_HOST=localhost
@@ -52,7 +59,13 @@ export POSTGRES_HOST=localhost
 
 After that update the following two postgres config files to allow connectivity to database from mev_inspect
 
-In `pg_hba.conf`
+Find the file
+
+```
+sudo -u postgres psql -c 'show hba_file'
+```
+
+Enter this directory, and edit `pg_hba.conf` adding this to the end:
 
 ```
 host    all             all             VM_PUBLIC_IP/32            md5
@@ -63,16 +76,6 @@ In `postgresql.conf`
 
 ```
 listen_addresses = '*' # find listen_address in file and replace localhost with *
-```
-
-mev-inspect-py currently requires a node with support for Erigon traces and receipts (not geth yet 😔).
-
-[pokt.network](https://www.pokt.network/)'s "Ethereum Mainnet Archival with trace calls" is a good hosted option.
-
-Example:
-
-```
-export RPC_URL="http://111.111.111.111:8546"
 ```
 
 Next, start all services with:
