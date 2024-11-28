@@ -9,6 +9,7 @@ RUN useradd --create-home flashbot \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+ENV POETRY_VIRTUALENVS_IN_PROJECT=true
 ENV PATH="${PATH}:/home/flashbot/.local/bin"
 
 COPY --chown=flashbot ./pyproject.toml /app/pyproject.toml
