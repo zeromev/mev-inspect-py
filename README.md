@@ -35,7 +35,7 @@ Create a new cluster with:
 sudo kind create cluster --config=kind-config.yaml
 ```
 
-Set an environment variable `RPC_URL` to an RPC for fetching blocks.
+Set an environment variable `RPC_URL` to the RPC of a full archive node for fetching blocks.
 
 Set three more environment variables for authentication of external database.
 
