@@ -32,7 +32,7 @@ Create a new cluster with:
 `kind-config.yaml` is part of this repo so cd into it and then create a new cluster
 
 ```
-kind create cluster --config=kind-config.yaml
+sudo kind create cluster --config=kind-config.yaml
 ```
 
 Set an environment variable `RPC_URL` to an RPC for fetching blocks.
