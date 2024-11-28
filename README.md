@@ -44,9 +44,10 @@ Set three more environment variables for authentication of external database.
 eg.
 
 ```
+export RPC_URL=YOUR_FULL_ARCHIVE_NODE_URL
 export POSTGRES_USER=postgres
 export POSTGRES_PASSWORD=YOUR_PASSWORD
-export POSTGRES_HOST=VM_PUBLIC_IP
+export POSTGRES_HOST=localhost
 ```
 
 After that update the following two postgres config files to allow connectivity to database from mev_inspect
