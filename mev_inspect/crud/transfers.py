@@ -26,7 +26,8 @@ def write_transfers(
     db_session,
     transfers: List[Transfer],
 ) -> None:
-    models = [TransferModel(**json.loads(transfer.json())) for transfer in transfers]
+    # models = [TransferModel(**json.loads(transfer.json())) for transfer in transfers]
 
-    db_session.bulk_save_objects(models)
-    db_session.commit()
+    # db_session.bulk_save_objects(models)
+    # db_session.commit()
+    print("")
