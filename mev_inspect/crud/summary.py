@@ -152,10 +152,12 @@ def update_summary_for_block_range(
     after_block_number: int,
     before_block_number: int,
 ) -> None:
-    _delete_summary_for_block_range(db_session, after_block_number, before_block_number)
-    _insert_into_summary_for_block_range(
-        db_session, after_block_number, before_block_number
-    )
+    print("")
+    # removed to avoid writing summary data
+    # _delete_summary_for_block_range(db_session, after_block_number, before_block_number)
+    #_insert_into_summary_for_block_range(
+    #    db_session, after_block_number, before_block_number
+    # )
 
 
 def _delete_summary_for_block_range(

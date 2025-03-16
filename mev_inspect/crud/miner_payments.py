@@ -25,10 +25,11 @@ def write_miner_payments(
     db_session,
     miner_payments: List[MinerPayment],
 ) -> None:
-    models = [
-        MinerPaymentModel(**json.loads(miner_payment.json()))
-        for miner_payment in miner_payments
-    ]
+    print("")
+    # models = [
+    #     MinerPaymentModel(**json.loads(miner_payment.json()))
+    #     for miner_payment in miner_payments
+    # ]
 
-    db_session.bulk_save_objects(models)
-    db_session.commit()
+    # db_session.bulk_save_objects(models)
+    # db_session.commit()
