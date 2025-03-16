@@ -83,7 +83,7 @@ async def inspect_many_blocks(
     after_block_number: int,
     before_block_number: int,
     trace_db_session: Optional[orm.Session],
-    should_write_classified_traces: bool = True,
+    should_write_classified_traces: bool = False,
 ):
     all_blocks: List[Block] = []
     all_classified_traces: List[ClassifiedTrace] = []
