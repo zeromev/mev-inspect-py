@@ -55,15 +55,21 @@ async def run():
     inspector = MEVInspector(rpc)
     base_provider = get_base_provider(rpc)
 
+
     while not killer.kill_now:
-        await inspect_next_block(
-            inspector,
-            inspect_db_session,
-            trace_db_session,
-            base_provider,
-            healthcheck_url,
-            export_actor,
-        )
+        try:
+            await inspect_next_block(
+                inspector,
+                inspect_db_session,
+                trace_db_session,
+                base_provider,
+                healthcheck_url,
+                export_actor,
+            )
+        except Exception as e:
+            logger.error(f"Error in inspect_next_block: {e}", exc_info=True)
+            logger.info("Pausing for 3 minutes before continuing...")
+            await asyncio.sleep(180)
 
     logger.info("Stopping...")
 
