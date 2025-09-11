@@ -68,8 +68,21 @@ async def run():
             )
         except Exception as e:
             logger.error(f"Error in inspect_next_block: {e}", exc_info=True)
-            logger.info("Pausing for 3 minutes before continuing...")
-            await asyncio.sleep(180)
+            # Close and re-create DB sessions to recover from invalid state
+            try:
+                if inspect_db_session is not None:
+                    inspect_db_session.close()
+            except Exception as close_e:
+                logger.error(f"Error closing inspect_db_session: {close_e}")
+            try:
+                if trace_db_session is not None:
+                    trace_db_session.close()
+            except Exception as close_e:
+                logger.error(f"Error closing trace_db_session: {close_e}")
+            inspect_db_session = get_inspect_session()
+            trace_db_session = get_trace_session()
+            logger.info("Recreated DB sessions. Pausing for 1 minute before continuing...")
+            await asyncio.sleep(60)
 
     logger.info("Stopping...")
 
